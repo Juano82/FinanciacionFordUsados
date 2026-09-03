@@ -483,7 +483,7 @@
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
+        detalleHTML += "Gasto de Prenda: $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
         if (quebranto > 0) {
             detalleHTML += "<br>Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
