@@ -97,7 +97,6 @@
             text-align: center;
         }
         
-        /* Estilo para el título con el botón Min */
         .anticipo-header {
             display: flex;
             align-items: center;
@@ -244,7 +243,6 @@
                 </div>
 
                 <div class="anticipo-box">
-                    <!-- Nueva estructura con el botón Min -->
                     <div class="anticipo-header">
                         <span>Anticipo Total</span>
                         <button class="btn-min" onclick="calcularAnticipoMinimo()">Min</button>
@@ -307,12 +305,9 @@
         return 0;
     }
 
-    // NUEVA FUNCIÓN: Botón Min
     function calcularAnticipoMinimo() {
         const slider = document.getElementById('monto');
-        // Si el slider no está deshabilitado (es decir, hay un valor de unidad válido)
         if (!slider.disabled) {
-            // Ponemos el financiamiento en el máximo permitido
             slider.value = slider.max;
             actualizarTextoMonto();
             actualizarCalculo();
@@ -336,7 +331,6 @@
             slider.min = 0; slider.max = montoMaximo; slider.value = montoMaximo;
             displayMax.innerText = '$ ' + montoMaximo.toLocaleString('es-AR');
             hint.innerText = "Tope del " + porcentajeMax + "% sobre el valor neto";
-            
             setTimeout(() => actualizarCalculo(), 0);
         } else {
             slider.disabled = true; slider.value = 0;
@@ -490,24 +484,30 @@
 
         const antiguedad = anioActual - parseInt(document.getElementById('anio').value);
 
+        // CORRECCIÓN: Redondear a 2 decimales antes de formatear
+        const prendaRedondeada = Math.round(gastoPrenda * 100) / 100;
+        const quebrantoRedondeado = Math.round(quebranto * 100) / 100;
+        const anticipoRedondeado = Math.round(anticipoTotal * 100) / 100;
+
         document.getElementById('res-primera-cuota').innerText = "$ " + cuotaBase.toLocaleString('es-AR', {minimumFractionDigits: 2});
-        document.getElementById('res-prenda').innerText = "$ " + gastoPrenda.toLocaleString('es-AR', {minimumFractionDigits: 2});
-        document.getElementById('res-quebranto').innerText = "$ " + quebranto.toLocaleString('es-AR', {minimumFractionDigits: 2});
+        document.getElementById('res-prenda').innerText = "$ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
+        document.getElementById('res-quebranto').innerText = "$ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         
         if (!editing.anticipo) {
-            document.getElementById('anticipoInput').value = "$ " + anticipoTotal.toLocaleString('es-AR', {minimumFractionDigits: 2});
+            document.getElementById('anticipoInput').value = "$ " + anticipoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
 
         if (!editing.monto) {
             document.getElementById('montoDisplay').value = "$ " + monto.toLocaleString('es-AR');
         }
 
+        // CORRECCIÓN: Usar los valores redondeados en el detalle
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Prenda: $ " + gastoPrenda.toLocaleString('es-AR', {minimumFractionDigits: 2}) + "<br>";
+        detalleHTML += "Prenda: $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2}) + "<br>";
         if (quebranto > 0) {
-            detalleHTML += "Quebranto: $ " + quebranto.toLocaleString('es-AR', {minimumFractionDigits: 2});
+            detalleHTML += "Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
 
         document.getElementById('res-detalle-anticipo').innerHTML = detalleHTML;
