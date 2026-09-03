@@ -44,7 +44,6 @@
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #2BA8E0; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(43,168,224,0.4); }
         input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #2BA8E0; cursor: pointer; border: 2px solid white; }
         
-        /* >>> TAMAÑO AJUSTADO: 32px <<< */
         .monto-display {
             font-size: 32px !important; 
             font-weight: bold !important; 
@@ -133,7 +132,6 @@
             background-color: #1f8ab8;
         }
         
-        /* >>> TAMAÑO AJUSTADO: 36px <<< */
         .anticipo-input {
             font-size: 36px !important; 
             font-weight: 800 !important;
@@ -365,9 +363,11 @@
         let v = input.value.replace(/\D/g, '');
         if (v === '') { input.value = ''; actualizarCalculo(); return; }
 
-        input.value = '$ ' + parseInt(v, 10).toLocaleString('es-AR');
+        // Redondear hacia arriba siempre
+        let valor = Math.ceil(parseFloat(v));
+        input.value = '$ ' + valor.toLocaleString('es-AR');
 
-        let anticipoDeseado = parseInt(v, 10);
+        let anticipoDeseado = valor;
         const valorUnidad = parseFloat(document.getElementById('valorUnidad').value.replace(/[^0-9]/g, '')) || 0;
         const entregaUsado = parseFloat(document.getElementById('entregaUsado').value.replace(/[^0-9]/g, '')) || 0;
         const slider = document.getElementById('monto');
@@ -407,7 +407,7 @@
         } else {
             editing.anticipo = false;
             let v = document.getElementById('anticipoInput').value.replace(/\D/g, '');
-            document.getElementById('anticipoInput').value = '$ ' + parseInt(v || 0).toLocaleString('es-AR', {minimumFractionDigits: 2});
+            document.getElementById('anticipoInput').value = '$ ' + Math.ceil(parseFloat(v || 0)).toLocaleString('es-AR');
         }
     }
 
@@ -475,17 +475,17 @@
 
         const antiguedad = anioActual - parseInt(document.getElementById('anio').value);
 
-        const prendaRedondeada = Math.round(gastoPrenda * 100) / 100;
-        const quebrantoRedondeado = Math.round(quebranto * 100) / 100;
-        const anticipoRedondeado = Math.round(anticipoTotal * 100) / 100;
+        // >>> REDONDEO HACIA ARRIBA (Math.ceil) PARA TODOS LOS MONTOS <<<
+        const cuotaRedondeada = Math.ceil(cuotaBase);
+        const prendaRedondeada = Math.ceil(gastoPrenda);
+        const quebrantoRedondeado = Math.ceil(quebranto);
+        const anticipoRedondeado = Math.ceil(anticipoTotal);
+        const capitalRedondeado = Math.ceil(capitalFinal);
 
-        // >>> CORRECCIÓN: Redondear la cuota a 2 decimales <<<
-        const cuotaRedondeada = Math.round(cuotaBase * 100) / 100;
-
-        document.getElementById('res-primera-cuota').innerText = "$ " + cuotaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('res-primera-cuota').innerText = "$ " + cuotaRedondeada.toLocaleString('es-AR', { maximumFractionDigits: 0 });
         
         if (!editing.anticipo) {
-            document.getElementById('anticipoInput').value = "$ " + anticipoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
+            document.getElementById('anticipoInput').value = "$ " + anticipoRedondeado.toLocaleString('es-AR', { maximumFractionDigits: 0 });
         }
 
         if (!editing.monto) {
@@ -495,14 +495,14 @@
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2}) + "<br>";
+        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + "<br>";
         if (quebranto > 0) {
-            detalleHTML += "Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
+            detalleHTML += "Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', { maximumFractionDigits: 0 });
         }
 
         document.getElementById('res-detalle-anticipo').innerHTML = detalleHTML;
 
-        document.getElementById('res-capital').innerText = "$ " + capitalFinal.toLocaleString('es-AR', {minimumFractionDigits: 2}) + textoExtra;
+        document.getElementById('res-capital').innerText = "$ " + capitalRedondeado.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + textoExtra;
         document.getElementById('res-tna').innerText = datosTasa.tna + "%";
         document.getElementById('res-cft').innerText = datosTasa.cft + "%";
         
