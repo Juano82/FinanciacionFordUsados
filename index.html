@@ -44,10 +44,20 @@
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #2BA8E0; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(43,168,224,0.4); }
         input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #2BA8E0; cursor: pointer; border: 2px solid white; }
         
+        /* IMPORTANTE: Importe del Saldo a financiar agrandado */
         .monto-display {
-            font-size: 18px; font-weight: bold; color: #2BA8E0; text-align: center;
-            margin-top: 6px; padding: 8px; background-color: #E6F7FF; border-radius: 6px;
-            width: 100%; box-sizing: border-box; border: 1px solid #E6F7FF; cursor: text;
+            font-size: 36px; 
+            font-weight: bold; 
+            color: #2BA8E0; 
+            text-align: center;
+            margin-top: 10px; 
+            padding: 12px; 
+            background-color: #E6F7FF; 
+            border-radius: 6px;
+            width: 100%; 
+            box-sizing: border-box; 
+            border: 1px solid #E6F7FF; 
+            cursor: text;
         }
         .monto-display:focus { border-color: #2BA8E0; outline: none; background-color: #ffffff; }
         
@@ -123,8 +133,9 @@
             background-color: #1f8ab8;
         }
         
+        /* IMPORTANTE: Importe del Anticipo agrandado */
         .anticipo-input {
-            font-size: 24px;
+            font-size: 48px; 
             font-weight: 800;
             color: #2BA8E0;
             text-align: center;
@@ -133,9 +144,10 @@
             border-radius: 6px;
             width: 100%;
             box-sizing: border-box;
-            padding: 8px;
+            padding: 12px; 
             margin-bottom: 5px;
             outline: none;
+            line-height: 1.2;
         }
         .anticipo-input:focus {
             box-shadow: 0 0 0 3px rgba(43, 168, 224, 0.2);
@@ -222,7 +234,6 @@
                 <div class="fila-resultado"><span>Capital Financiado</span> <strong id="res-capital"></strong></div>
                 <div class="fila-resultado"><span>TNA</span> <strong id="res-tna"></strong></div>
                 
-                <!-- La 1ra Cuota ocupa todo el ancho -->
                 <div class="total">
                     <span>1ra Cuota</span>
                     <strong id="res-primera-cuota"></strong>
@@ -464,7 +475,6 @@
 
         const antiguedad = anioActual - parseInt(document.getElementById('anio').value);
 
-        // Redondear a 2 decimales antes de formatear
         const prendaRedondeada = Math.round(gastoPrenda * 100) / 100;
         const quebrantoRedondeado = Math.round(quebranto * 100) / 100;
         const anticipoRedondeado = Math.round(anticipoTotal * 100) / 100;
@@ -479,11 +489,10 @@
             document.getElementById('montoDisplay').value = "$ " + monto.toLocaleString('es-AR');
         }
 
-        // Desglose dentro del anticipo
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Gasto de Prenda: $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
+        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
         if (quebranto > 0) {
             detalleHTML += "<br>Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
