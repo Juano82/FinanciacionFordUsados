@@ -479,7 +479,10 @@
         const quebrantoRedondeado = Math.round(quebranto * 100) / 100;
         const anticipoRedondeado = Math.round(anticipoTotal * 100) / 100;
 
-        document.getElementById('res-primera-cuota').innerText = "$ " + cuotaBase.toLocaleString('es-AR', {minimumFractionDigits: 2});
+        // >>> CORRECCIÓN: Redondear la cuota a 2 decimales <<<
+        const cuotaRedondeada = Math.round(cuotaBase * 100) / 100;
+
+        document.getElementById('res-primera-cuota').innerText = "$ " + cuotaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
         if (!editing.anticipo) {
             document.getElementById('anticipoInput').value = "$ " + anticipoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
@@ -492,9 +495,9 @@
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
+        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2}) + "<br>";
         if (quebranto > 0) {
-            detalleHTML += "<br>Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
+            detalleHTML += "Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
 
         document.getElementById('res-detalle-anticipo').innerHTML = detalleHTML;
