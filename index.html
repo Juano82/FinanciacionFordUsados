@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador ICBC Ford Strianese</title>
+    <title>Simulador Ford ICBC - Compacto Celeste</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
@@ -60,9 +60,6 @@
         .fila-resultado { background: white; padding: 6px 8px; border-radius: 4px; border: 1px solid #eee; }
         .fila-resultado span { display: block; font-size: 10px; color: #666; margin-bottom: 2px; }
         .fila-resultado strong { font-size: 14px; color: #333; }
-        
-        .fila-gasto { background: #f0faff; border: 1px solid #cceeff; }
-        .fila-gasto strong { color: #2BA8E0; }
 
         .total { 
             grid-column: span 3; 
@@ -225,18 +222,7 @@
                 <div class="fila-resultado"><span>Capital Financiado</span> <strong id="res-capital"></strong></div>
                 <div class="fila-resultado"><span>TNA</span> <strong id="res-tna"></strong></div>
                 
-                <div class="fila-resultado fila-gasto">
-                    <span>Gasto de Prenda (3%)</span> 
-                    <strong id="res-prenda"></strong>
-                </div>
-                
-                <div class="fila-resultado fila-gasto" id="fila-quebranto" style="display: none;">
-                    <span id="label-quebranto">Quebranto</span> 
-                    <strong id="res-quebranto"></strong>
-                </div>
-                
-                <div></div>
-                
+                <!-- La 1ra Cuota ocupa todo el ancho -->
                 <div class="total">
                     <span>1ra Cuota</span>
                     <strong id="res-primera-cuota"></strong>
@@ -436,7 +422,6 @@
         let monto = parseInt(document.getElementById('monto').value) || 0;
         const mensajeInicial = document.getElementById('mensaje-inicial');
         const detalle = document.getElementById('detalle-calculado');
-        const filaQuebranto = document.getElementById('fila-quebranto');
 
         if (valorUnidad <= 0) {
             mensajeInicial.style.display = 'block'; detalle.style.display = 'none'; return;
@@ -466,15 +451,10 @@
         if (config.quebranto && config.quebranto[cuotas]) {
             const quebrantoPorc = config.quebranto[cuotas];
             quebranto = monto * quebrantoPorc;
-            filaQuebranto.style.display = 'block';
-            document.getElementById('label-quebranto').innerText = "Quebranto (" + (quebrantoPorc * 100).toFixed(2) + "%)";
         } 
         else if (config.premio) {
             capitalFinal = monto * (1 + config.premio);
             textoExtra = " (Incluye 5% premio)";
-            filaQuebranto.style.display = 'none';
-        } else {
-            filaQuebranto.style.display = 'none';
         }
 
         const cuotaBase = (capitalFinal / 1000) * datosTasa.vCuota;
@@ -484,14 +464,12 @@
 
         const antiguedad = anioActual - parseInt(document.getElementById('anio').value);
 
-        // CORRECCIÓN: Redondear a 2 decimales antes de formatear
+        // Redondear a 2 decimales antes de formatear
         const prendaRedondeada = Math.round(gastoPrenda * 100) / 100;
         const quebrantoRedondeado = Math.round(quebranto * 100) / 100;
         const anticipoRedondeado = Math.round(anticipoTotal * 100) / 100;
 
         document.getElementById('res-primera-cuota').innerText = "$ " + cuotaBase.toLocaleString('es-AR', {minimumFractionDigits: 2});
-        document.getElementById('res-prenda').innerText = "$ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
-        document.getElementById('res-quebranto').innerText = "$ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         
         if (!editing.anticipo) {
             document.getElementById('anticipoInput').value = "$ " + anticipoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
@@ -501,13 +479,13 @@
             document.getElementById('montoDisplay').value = "$ " + monto.toLocaleString('es-AR');
         }
 
-        // CORRECCIÓN: Usar los valores redondeados en el detalle
+        // Desglose dentro del anticipo
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Prenda: $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2}) + "<br>";
+        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', {minimumFractionDigits: 2});
         if (quebranto > 0) {
-            detalleHTML += "Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
+            detalleHTML += "<br>Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
 
         document.getElementById('res-detalle-anticipo').innerHTML = detalleHTML;
