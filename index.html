@@ -363,7 +363,6 @@
         let v = input.value.replace(/\D/g, '');
         if (v === '') { input.value = ''; actualizarCalculo(); return; }
 
-        // Redondear hacia arriba siempre
         let valor = Math.ceil(parseFloat(v));
         input.value = '$ ' + valor.toLocaleString('es-AR');
 
@@ -475,7 +474,7 @@
 
         const antiguedad = anioActual - parseInt(document.getElementById('anio').value);
 
-        // >>> REDONDEO HACIA ARRIBA (Math.ceil) PARA TODOS LOS MONTOS <<<
+        // Redondeo hacia arriba para todos los montos
         const cuotaRedondeada = Math.ceil(cuotaBase);
         const prendaRedondeada = Math.ceil(gastoPrenda);
         const quebrantoRedondeado = Math.ceil(quebranto);
@@ -495,7 +494,10 @@
         let detalleHTML = "Valor: $ " + valorUnidad.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Financiado: $ " + monto.toLocaleString('es-AR') + "<br>";
         detalleHTML += "Entrega: $ " + entregaUsado.toLocaleString('es-AR') + "<br>";
-        detalleHTML += "Gasto de Prenda (3%): $ " + prendaRedondeada.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + "<br>";
+        
+        // >>> CAMBIO AQUÍ: Se quitó el "(3%)" del texto <<<
+        detalleHTML += "Gasto de Prenda: $ " + prendaRedondeada.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + "<br>";
+        
         if (quebranto > 0) {
             detalleHTML += "Quebranto: $ " + quebrantoRedondeado.toLocaleString('es-AR', { maximumFractionDigits: 0 });
         }
